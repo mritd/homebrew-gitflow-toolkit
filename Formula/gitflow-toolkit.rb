@@ -1,3 +1,5 @@
+require "open-uri"
+
 class GitflowToolkit < Formula
   desc "CLI tool for standardizing git commits following Angular commit specification"
   homepage "https://github.com/mritd/gitflow-toolkit"
@@ -5,14 +7,14 @@ class GitflowToolkit < Formula
 
   # Get latest version from GitHub API
   latest_version = JSON.parse(
-    URI.open("https://api.github.com/repos/mritd/gitflow-toolkit/releases/latest").read
+    URI.parse("https://api.github.com/repos/mritd/gitflow-toolkit/releases/latest").open.read
   )["tag_name"].delete_prefix("v")
 
   version latest_version
 
   # Fetch checksums from release
   checksums_url = "https://github.com/mritd/gitflow-toolkit/releases/download/v#{version}/checksums.txt"
-  checksums = URI.open(checksums_url).read.lines.to_h { |l| l.strip.split("  ").reverse }
+  checksums = URI.parse(checksums_url).open.read.lines.to_h { |l| l.strip.split("  ").reverse }
 
   on_macos do
     on_intel do
